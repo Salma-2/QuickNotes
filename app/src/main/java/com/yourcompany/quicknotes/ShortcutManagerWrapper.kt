@@ -35,44 +35,67 @@
 package com.yourcompany.quicknotes
 
 import android.content.Context
+import android.content.Intent
 import androidx.core.content.pm.ShortcutInfoCompat
+import androidx.core.content.pm.ShortcutManagerCompat
+import androidx.core.graphics.drawable.IconCompat
 import com.yourcompany.quicknotes.domain.Note
+import com.yourcompany.quicknotes.screen.newnote.NoteActivity
+import com.yourcompany.quicknotes.screen.notes.NotesActivity
 
 interface ShortcutManagerWrapper {
 
-  fun addNoteShortcut(note: Note)
-  fun removeNoteShortcut(noteId: String)
-  fun updateShortcut(note: Note)
-  fun createPinnedShortcut(note: Note)
-  fun isShortcutCreated(noteId: String): Boolean
+    fun addNoteShortcut(note: Note)
+    fun removeNoteShortcut(noteId: String)
+    fun updateShortcut(note: Note)
+    fun createPinnedShortcut(note: Note)
+    fun isShortcutCreated(noteId: String): Boolean
 }
 
 class ShortcutManagerWrapperImpl(
-    private val context: Context
+    private val context: Context,
 ) : ShortcutManagerWrapper {
 
-  override fun addNoteShortcut(note: Note) {
-    // TODO 4: Push Dynamic Shortcut
-  }
+    override fun addNoteShortcut(note: Note) {
+        //  Push Dynamic Shortcut
+        val shortcut = createShortcutInfo(note)
+        ShortcutManagerCompat.pushDynamicShortcut(context, shortcut)
+    }
 
-  override fun removeNoteShortcut(noteId: String) {
-    // TODO 7: Remove Dynamic Shortcut"
-  }
+    override fun removeNoteShortcut(noteId: String) {
+        ShortcutManagerCompat.removeDynamicShortcuts(context, listOf(noteId))
 
-  override fun updateShortcut(note: Note) {
-    // TODO 5: Update Dynamic Shortcut
-  }
+    }
 
-  override fun createPinnedShortcut(note: Note) {
-    // TODO 8: Create Pinned Shortcut
-  }
+    override fun updateShortcut(note: Note) {
+        addNoteShortcut(note)
+    }
 
-  // TODO 6: Check if Dynamic Shortcut exists
-  override fun isShortcutCreated(noteId: String): Boolean {
-    return false
-  }
+    override fun createPinnedShortcut(note: Note) {
+        // TODO 8: Create Pinned Shortcut
+    }
 
-  private fun createShortcutInfo(note: Note): ShortcutInfoCompat {
-    TODO("3: Create shortcut that leads a user to the specific Note")
-  }
+    //  Check if Dynamic Shortcut exists
+    override fun isShortcutCreated(noteId: String): Boolean {
+        return ShortcutManagerCompat.getDynamicShortcuts(context)
+            .find {
+                it.id == noteId
+            } != null
+    }
+
+    private fun createShortcutInfo(note: Note): ShortcutInfoCompat {
+        // Create shortcut that leads a user to the specific Note
+        return ShortcutInfoCompat.Builder(context, note.id)
+            .setShortLabel(note.title)
+            .setLongLabel("See ${note.title}")
+            .setIcon(IconCompat.createWithResource(context, R.drawable.ic_note))
+            .setIntents(
+                arrayOf(
+                    NotesActivity.createIntent(context).apply { action = Intent.ACTION_VIEW },
+                    NoteActivity.createIntent(context, note.id)
+                        .apply { action = Intent.ACTION_VIEW }
+                )
+            )
+            .build()
+    }
 }
