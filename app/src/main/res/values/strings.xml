@@ -1,0 +1,17 @@
+<resources>
+  <string name="app_name">Quick Notes</string>
+  <string name="title_input_hint">Title</string>
+  <string name="content_input_hint">What\'s on your mind?</string>
+  <string name="save_button_text">Save</string>
+  <string name="update_button_text">Update</string>
+  <string name="delete">Delete</string>
+  <string name="create_shortcut">Create dynamic shortcut</string>
+  <string name="create_pinned_shortcut">Create pinned shortcut</string>
+  <string name="remove_shortcut">Remove dynamic shortcut</string>
+  <string name="new_note_long_label">Add a new note</string>
+  <string name="new_note_short_label">New note</string>
+  <string name="dialog_delete_title">Would you like to delete this note?</string>
+  <string name="dialog_delete_message">Are you sure?</string>
+  <string name="dialog_delete_positive_button">Delete</string>
+  <string name="dialog_delete_negative_button">Cancel</string>
+</resources>
